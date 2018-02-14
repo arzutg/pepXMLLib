@@ -1,0 +1,112 @@
+14:14:43 **** Build of configuration Debug for project pepXMLLib ****
+make all 
+Building file: ../src/IOFunctions.c
+Invoking: Cygwin C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/IOFunctions.d" -MT"src/IOFunctions.o" -o "src/IOFunctions.o" "../src/IOFunctions.c"
+Finished building: ../src/IOFunctions.c
+ 
+Building file: ../src/PeptideProphetDelegate.c
+Invoking: Cygwin C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/PeptideProphetDelegate.d" -MT"src/PeptideProphetDelegate.o" -o "src/PeptideProphetDelegate.o" "../src/PeptideProphetDelegate.c"
+Finished building: ../src/PeptideProphetDelegate.c
+ 
+Building file: ../src/StringFunctions.c
+Invoking: Cygwin C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/StringFunctions.d" -MT"src/StringFunctions.o" -o "src/StringFunctions.o" "../src/StringFunctions.c"
+Finished building: ../src/StringFunctions.c
+ 
+Building file: ../src/XMLFunctions.c
+Invoking: Cygwin C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/XMLFunctions.d" -MT"src/XMLFunctions.o" -o "src/XMLFunctions.o" "../src/XMLFunctions.c"
+Finished building: ../src/XMLFunctions.c
+ 
+Building file: ../src/pepXMLDelegates.c
+Invoking: Cygwin C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/pepXMLDelegates.d" -MT"src/pepXMLDelegates.o" -o "src/pepXMLDelegates.o" "../src/pepXMLDelegates.c"
+Finished building: ../src/pepXMLDelegates.c
+ 
+Building file: ../src/pepXMLParser.c
+Invoking: Cygwin C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/pepXMLParser.d" -MT"src/pepXMLParser.o" -o "src/pepXMLParser.o" "../src/pepXMLParser.c"
+../src/pepXMLParser.c: In function 'parse_msms_pipeline_analysis':
+../src/pepXMLParser.c:78:37: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+    retval->start_offset = offset + ((int)tag - (int)read_buffer);
+                                     ^
+../src/pepXMLParser.c:78:48: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+    retval->start_offset = offset + ((int)tag - (int)read_buffer);
+                                                ^
+../src/pepXMLParser.c:86:49: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+     retval->analysis_summary_offset = offset + ((int)tag - (int)read_buffer);
+                                                 ^
+../src/pepXMLParser.c:86:60: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+     retval->analysis_summary_offset = offset + ((int)tag - (int)read_buffer);
+                                                            ^
+../src/pepXMLParser.c:96:51: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+     retval->dataset_derivation_offset = offset + ((int)tag - (int)read_buffer);
+                                                   ^
+../src/pepXMLParser.c:96:62: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+     retval->dataset_derivation_offset = offset + ((int)tag - (int)read_buffer);
+                                                              ^
+../src/pepXMLParser.c:108:53: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+     retval->dataset_derivation_length = ((offset + ((int)tag - (int)read_buffer)) - retval->dataset_derivation_offset)-1;
+                                                     ^
+../src/pepXMLParser.c:108:64: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+     retval->dataset_derivation_length = ((offset + ((int)tag - (int)read_buffer)) - retval->dataset_derivation_offset)-1;
+                                                                ^
+../src/pepXMLParser.c:111:51: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+     retval->analysis_summary_length = ((offset + ((int)tag - (int)read_buffer)) - retval->dataset_derivation_offset)-1;
+                                                   ^
+../src/pepXMLParser.c:111:62: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+     retval->analysis_summary_length = ((offset + ((int)tag - (int)read_buffer)) - retval->dataset_derivation_offset)-1;
+                                                              ^
+../src/pepXMLParser.c: In function 'parse_run_summary':
+../src/pepXMLParser.c:256:44: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+    retval.sample_enzyme_offset = offset + ((int)tag - (int)read_buffer);
+                                            ^
+../src/pepXMLParser.c:256:55: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+    retval.sample_enzyme_offset = offset + ((int)tag - (int)read_buffer);
+                                                       ^
+../src/pepXMLParser.c:265:46: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+     retval.search_summary_offset = offset + ((int)tag - (int)read_buffer);
+                                              ^
+../src/pepXMLParser.c:265:57: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+     retval.search_summary_offset = offset + ((int)tag - (int)read_buffer);
+                                                         ^
+../src/pepXMLParser.c:277:50: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+     retval.analysis_timestamp_offset = offset + ((int)tag - (int)read_buffer);
+                                                  ^
+../src/pepXMLParser.c:277:61: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+     retval.analysis_timestamp_offset = offset + ((int)tag - (int)read_buffer);
+                                                             ^
+../src/pepXMLParser.c:290:25: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+    offset_t = offset + ((int)tag - (int)read_buffer);
+                         ^
+../src/pepXMLParser.c:290:36: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+    offset_t = offset + ((int)tag - (int)read_buffer);
+                                    ^
+Finished building: ../src/pepXMLParser.c
+ 
+Building file: ../src/pepXMLReader.c
+Invoking: Cygwin C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/pepXMLReader.d" -MT"src/pepXMLReader.o" -o "src/pepXMLReader.o" "../src/pepXMLReader.c"
+Finished building: ../src/pepXMLReader.c
+ 
+Building file: ../src/pepXMLWriteFunctions.c
+Invoking: Cygwin C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/pepXMLWriteFunctions.d" -MT"src/pepXMLWriteFunctions.o" -o "src/pepXMLWriteFunctions.o" "../src/pepXMLWriteFunctions.c"
+Finished building: ../src/pepXMLWriteFunctions.c
+ 
+Building file: ../src/pepXMLWriter.c
+Invoking: Cygwin C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/pepXMLWriter.d" -MT"src/pepXMLWriter.o" -o "src/pepXMLWriter.o" "../src/pepXMLWriter.c"
+Finished building: ../src/pepXMLWriter.c
+ 
+Building target: libpepXMLLib.a
+Invoking: GCC Archiver
+ar -r  "libpepXMLLib.a"  ./src/IOFunctions.o ./src/PeptideProphetDelegate.o ./src/StringFunctions.o ./src/XMLFunctions.o ./src/pepXMLDelegates.o ./src/pepXMLParser.o ./src/pepXMLReader.o ./src/pepXMLWriteFunctions.o ./src/pepXMLWriter.o   
+ar: creating libpepXMLLib.a
+Finished building target: libpepXMLLib.a
+ 
+
+14:14:51 Build Finished (took 8s.312ms)
+
