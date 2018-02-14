@@ -1,10 +1,15 @@
-#ifndef __PEPXML_SPECTRUM_QUERY_H__
-#define __PEPXML_SPECTRUM_QUERY_H__
+#ifndef PEPXMLSTRUCTURES_H
+#define	PEPXMLSTRUCTURES_H
 
-#ifdef __cplusplus
-extern "C"
-{
+#ifdef	__cplusplus
+extern "C" {
 #endif
+
+/*typedef struct analysis_peptideprophet_result
+{
+	double probability;
+
+} pepprophet, *ppepprophet;*/
 
 /* analysis_result element. Hook refers to a custom structure the user can hang on it */
 typedef struct pepxml_analysis_result
@@ -12,6 +17,11 @@ typedef struct pepxml_analysis_result
 	char* analysis;	/* Name of the analysis */
 	int   id;		/* Unique identifier */
 	void* hook;		/* Contents */
+
+	double probability;
+
+	/* Elements */
+	//ppepprophet peptideprophet_result;
 
 } analysis_result, *panalysis_result;
 
@@ -279,23 +289,25 @@ typedef struct pepxml_msms_pipeline_analysis
 
 
 	/* Elements */
-	long				analysis_summary_offset;	/* Offset of the analysis summary element */
-	long				analysis_summary_length;	/* Length of the analysis summary element */
+	long			analysis_summary_offset;	/* Offset of the analysis summary element */
+	long			analysis_summary_length;	/* Length of the analysis summary element */
 	panalysis_summary	analysis_summary_array;		/* Array of analysis summaries */
-	int					analysis_summary_count;		/* Size of said array */
+	int			analysis_summary_count;		/* Size of said array */
 
-	long				dataset_derivation_offset;	/* Offset of the dataset derivation element */
-	long				dataset_derivation_length;	/* Length of the dataset derivation element */
+	long			dataset_derivation_offset;	/* Offset of the dataset derivation element */
+	long			dataset_derivation_length;	/* Length of the dataset derivation element */
 	pdataset_derivation	dataset_derivation_struct;	/* Dataset derivation element */
 
 	pmsms_run_summary	run_summary_array;			/* Array of all run summaries */
-	int					run_summary_count;			/* Size of said array */
+	int			run_summary_count;			/* Size of said array */
 
 } msms_pipeline_analysis, *pmsms_pipeline_analysis;
 
 
-#ifdef __cplusplus
+
+#ifdef	__cplusplus
 }
 #endif
 
-#endif
+#endif	/* PEPXMLSTRUCTURES_H */
+

@@ -1,9 +1,8 @@
-#ifndef __PEPXML_READER_H__
-#define __PEPXML_READER_H__
+#ifndef PEPXMLREADER_H
+#define	PEPXMLREADER_H
 
-#ifdef __cplusplus
-extern "C"
-{
+#ifdef	__cplusplus
+extern "C" {
 #endif
 
 #include <stdio.h>
@@ -31,8 +30,10 @@ psearch_summary run_summary_search_summary(pmsms_run_summary run_summary, int* a
 /* Gets the analysis timestamp element array from a specific run summary */
 panalysis_timestamp run_summary_analysis_timestamp(pmsms_run_summary run_summary, int* array_length);
 
-#ifdef __cplusplus
+
+#ifdef	__cplusplus
 }
 #endif
 
-#endif
+#endif	/* PEPXMLREADER_H */
+

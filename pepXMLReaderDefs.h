@@ -1,6 +1,9 @@
-#ifndef __PEPXML_READER_DEFS_H__
-#define __PEPXML_READER_DEFS_H__
+#ifndef PEPXMLREADERDEFS_H
+#define	PEPXMLREADERDEFS_H
 
+#ifdef	__cplusplus
+extern "C" {
+#endif
 
 /* Configuration flags for pre-loading the run summary */
 typedef unsigned char pipeline_analysis_flags;
@@ -16,4 +19,10 @@ typedef unsigned char run_summary_flags;
 #define load_analysis_timestamp	4
 #define load_all_summary		7
 
+
+#ifdef	__cplusplus
+}
 #endif
+
+#endif	/* PEPXMLREADERDEFS_H */
+

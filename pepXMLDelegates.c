@@ -81,3 +81,5 @@ pdelegate_type get_delegate(char* key, char* context, pdelegate_list list)
 	return NULL;
 
 }/* pdelegate_type get_delegate(char* key, pdelegate_type[], int size) */
+
+

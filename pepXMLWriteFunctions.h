@@ -1,9 +1,8 @@
-#ifndef __PEPXML_WRITE_FUNCTIONS_H__
-#define __PEPXML_WRITE_FUNCTIONS_H__
+#ifndef PEPXMLWRITEFUNCTIONS_H
+#define	PEPXMLWRITEFUNCTIONS_H
 
-#ifdef __cplusplus
-extern "C"
-{
+#ifdef	__cplusplus
+extern "C" {
 #endif
 
 #include <stdio.h>
@@ -73,8 +72,10 @@ void print_analysis_result(search_hit s_hit, FILE* output, pdelegate_list dlist)
 /* Writes the search score structures */
 void print_parameter(search_hit s_hit, FILE* output);
 
-#ifdef __cplusplus
+
+#ifdef	__cplusplus
 }
 #endif
 
-#endif
+#endif	/* PEPXMLWRITEFUNCTIONS_H */
+

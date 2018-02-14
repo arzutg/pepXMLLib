@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "pepxmlDefs.h"
+#include "pepXMLDefs.h"
 #include "pepXMLReader.h"
 #include "pepXMLReaderDefs.h"
 #include "pepXMLDelegates.h"
@@ -16,7 +16,9 @@ pmsms_pipeline_analysis read_pepxml_file(char* file_name, pipeline_analysis_flag
 
 	/* Logging file and opening it */
 	retval->file_name = file_name;
+
 	pepxml_filehandle = fopen(file_name, "rb");
+
 	if (!pepxml_filehandle)
 		return NULL;
 
@@ -108,3 +110,5 @@ panalysis_timestamp run_summary_analysis_timestamp(pmsms_run_summary run_summary
 	return NULL;
 
 }/* panalysis_timestamp run_summary_analysis_timestamp(pmsms_run_summary run_summary, int* array_length) */
+
+

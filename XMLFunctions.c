@@ -27,7 +27,7 @@ loop:
 			return tmpptr;
 		}/* if */
 		else if (file_handle) {
-			*offset += update_pepxml_buffer(buffer, tmpptr, file_handle, buffersize);
+			*offset += update_xml_buffer(buffer, tmpptr, file_handle, buffersize);
 			*bufpos = buffer;
 			unupdated = 0;
 			goto loop;
@@ -36,7 +36,7 @@ loop:
 			return NULL;
 	}/* if */
 	else if (unupdated && file_handle) {
-		*offset += update_pepxml_buffer(buffer, *bufpos, file_handle, buffersize);
+		*offset += update_xml_buffer(buffer, *bufpos, file_handle, buffersize);
 		*bufpos = buffer;
 		unupdated = 0;
 		goto loop;
@@ -97,7 +97,7 @@ loop:
 		return retval;
 	}/* if */
 	else if (file_handle && unupdated) {
-		*offset += update_pepxml_buffer(buffer, *bufpos, file_handle, buffersize);
+		*offset += update_xml_buffer(buffer, *bufpos, file_handle, buffersize);
 		*bufpos = buffer;
 		unupdated = 0;
 		goto loop;
@@ -159,3 +159,5 @@ char* seconds_to_xml_duration(double seconds)
 	return strclone(maxbuf);
 
 }
+
+

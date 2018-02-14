@@ -1,9 +1,8 @@
-#ifndef __PEPXML_WRITER_H__
-#define __PEPXML_WRITER_H__
+#ifndef PEPXMLWRITER_H
+#define	PEPXMLWRITER_H
 
-#ifdef __cplusplus
-extern "C"
-{
+#ifdef	__cplusplus
+extern "C" {
 #endif
 
 #include <stdio.h>
@@ -13,8 +12,10 @@ extern "C"
 /* Writes the entire file. Copies all residual info from the file recorded in pepxml_file */
 void write_pepxml_file(pmsms_pipeline_analysis pepxml_file, char* dest_file_name, pdelegate_list dlist);
 
-#ifdef __cplusplus
+
+#ifdef	__cplusplus
 }
 #endif
 
-#endif
+#endif	/* PEPXMLWRITER_H */
+

@@ -1,5 +1,9 @@
-#ifndef __PEPXML_DEFS_H__
-#define __PEPXML_DEFS_H__
+#ifndef PEPXMLDEFS_H
+#define	PEPXMLDEFS_H
+
+#ifdef	__cplusplus
+extern "C" {
+#endif
 
 /* Language definition standards */
 #define XML_TAG_CTAG "/>"
@@ -141,11 +145,21 @@
 #define ANALYSIS_RESULT_ATTRIB_ANALYSIS "analysis"
 #define ANALYSIS_RESULT_ATTRIB_ID "id"
 
+/* Demarkation of peptideprophet_result Tag */
+#define PEP_PROPHET_RESULT_OTAG "<peptideprophet_result"
+#define PEP_PROPHET_RESULT_CTAG "</peptideprophet_result"
+#define PEP_PROPHET_RESULT_ATTRIB_PROBABILITY "probability"
+
 /* Demarkation of the search_hit parameters */
 #define PARAMETER_OTAG "<parameter"
 #define PARAMETER_ATTRIB_NAME "name"
 #define PARAMETER_ATTRIB_VALUE "value"
 #define PARAMETER_ATTRIB_TYPE "type"
 
+
+#ifdef	__cplusplus
+}
 #endif
+
+#endif	/* PEPXMLDEFS_H */
 

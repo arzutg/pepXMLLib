@@ -1,9 +1,8 @@
-#ifndef __XML_FUNCTIONS_H__
-#define __XML_FUNCTIONS_H__
+#ifndef XMLFUNCTIONS_H
+#define	XMLFUNCTIONS_H
 
-#ifdef __cplusplus
-extern "C"
-{
+#ifdef	__cplusplus
+extern "C" {
 #endif
 
 #include <stdlib.h>
@@ -33,8 +32,10 @@ double xml_duration_to_seconds(char* duration);
 /* Converts seconds to duration type */
 char* seconds_to_xml_duration(double seconds);
 
-#ifdef __cplusplus
+
+#ifdef	__cplusplus
 }
 #endif
 
-#endif
+#endif	/* XMLFUNCTIONS_H */
+

@@ -78,7 +78,7 @@ void parse_msms_pipeline_analysis(pmsms_pipeline_analysis retval, FILE* finput, 
 	while (strstr(tag, MSMS_PIPELINE_ANALYSIS_CTAG) == NULL) {
 		/* Opening tag, filter attributes */
 		if (strstr(tag, MSMS_PIPELINE_ANALYSIS_OTAG) && phasecounter <= 0) {
-			retval->start_offset = offset + ((int)tag - (int)read_buffer);
+			retval->start_offset = offset + (tag - read_buffer);
 			retval->name = get_xml_attribute_value(tag, MSMS_PIPELINE_ANALYSIS_ATTRIB_NAME);
 			retval->date = get_xml_attribute_value(tag, MSMS_PIPELINE_ANALYSIS_ATTRIB_DATE);
 			retval->summary_xml = get_xml_attribute_value(tag, MSMS_PIPELINE_ANALYSIS_ATTRIB_SUMMARY_XML);
@@ -86,7 +86,7 @@ void parse_msms_pipeline_analysis(pmsms_pipeline_analysis retval, FILE* finput, 
 		/* Optional analysis summary */
 		else if (strstr(tag, ANALYSIS_SUMMARY_OTAG) && phasecounter <= 1) {
 			if (retval->analysis_summary_offset < 0) {
-				retval->analysis_summary_offset = offset + ((int)tag - (int)read_buffer);
+				retval->analysis_summary_offset = offset + (tag - read_buffer);
 			}// if
 			if (paflags & load_analysis_summary) {
 				parse_analysis_summary_structure(retval, tag, finput, dlist);
@@ -96,7 +96,7 @@ void parse_msms_pipeline_analysis(pmsms_pipeline_analysis retval, FILE* finput, 
 		/* Optional dataset derivation */
 		else if (strstr(tag, DATASET_DERIVATION_OTAG) && phasecounter <= 2) {
 			if (retval->dataset_derivation_offset < 0) {
-				retval->dataset_derivation_offset = offset + ((int)tag - (int)read_buffer);
+				retval->dataset_derivation_offset = offset + (tag - read_buffer);
 				if (retval->analysis_summary_offset >= 0 && retval->analysis_summary_length < 0) {
 					retval->analysis_summary_length = (retval->dataset_derivation_offset - retval->analysis_summary_offset)-1;
 				}// if
@@ -108,10 +108,10 @@ void parse_msms_pipeline_analysis(pmsms_pipeline_analysis retval, FILE* finput, 
 		/* Certain structure Run summary */
 		else if (strstr(tag, MSMS_RUN_SUMMARY_OTAG) && phasecounter <= 3) {
 			if (retval->dataset_derivation_offset >= 0 && retval->dataset_derivation_length < 0) {
-				retval->dataset_derivation_length = ((offset + ((int)tag - (int)read_buffer)) - retval->dataset_derivation_offset)-1;
+				retval->dataset_derivation_length = ((offset + (tag - read_buffer)) - retval->dataset_derivation_offset)-1;
 			}
 			else if (retval->analysis_summary_offset >= 0 && retval->analysis_summary_length < 0) {
-				retval->analysis_summary_length = ((offset + ((int)tag - (int)read_buffer)) - retval->dataset_derivation_offset)-1;
+				retval->analysis_summary_length = ((offset + (tag - read_buffer)) - retval->dataset_derivation_offset)-1;
 			}// if
 			parse_run_summary_structure(retval, tag, finput, rsflags, dlist);
 			phasecounter = 3;
@@ -257,7 +257,7 @@ msms_run_summary parse_run_summary(char* beginptr, FILE* finput, run_summary_fla
 	while (strstr(tag, MSMS_RUN_SUMMARY_CTAG) == NULL) {
 		/* Optional sample enzyme */
 		if (strstr(tag, SAMPLE_ENZYME_OTAG) && phasecounter <= 0) {
-			retval.sample_enzyme_offset = offset + ((int)tag - (int)read_buffer);
+			retval.sample_enzyme_offset = offset + (tag - read_buffer);
 			if (rsflags & load_sample_enzyme) {
 				parse_sample_enzyme_structure(&retval, tag, finput);
 			}// if
@@ -266,7 +266,7 @@ msms_run_summary parse_run_summary(char* beginptr, FILE* finput, run_summary_fla
 		/* Optional search summary */
 		else if (strstr(tag, SEARCH_SUMMARY_OTAG) && phasecounter <= 2) {
 			if (retval.search_summary_offset < 0) {
-				retval.search_summary_offset = offset + ((int)tag - (int)read_buffer);
+				retval.search_summary_offset = offset + (tag - read_buffer);
 				if (retval.sample_enzyme_offset >= 0 && retval.sample_enzyme_length < 0) {
 					retval.sample_enzyme_length = (retval.search_summary_offset - retval.sample_enzyme_offset)-1;
 				}// if
@@ -279,7 +279,7 @@ msms_run_summary parse_run_summary(char* beginptr, FILE* finput, run_summary_fla
 		/* Optional analysis timestamp */
 		else if (strstr(tag, ANALYSIS_TIMESTAMP_OTAG) && phasecounter <= 3) {
 			if (retval.analysis_timestamp_offset < 0) {
-				retval.analysis_timestamp_offset = offset + ((int)tag - (int)read_buffer);
+				retval.analysis_timestamp_offset = offset + (tag - read_buffer);
 				if (retval.search_summary_offset >= 0 && retval.search_summary_length < 0) {
 					retval.search_summary_length = (retval.analysis_timestamp_offset - retval.search_summary_offset)-1;
 				}// if
@@ -293,7 +293,7 @@ msms_run_summary parse_run_summary(char* beginptr, FILE* finput, run_summary_fla
 			phasecounter = 3;
 		}/* else if */
 		else if (strstr(tag, SPECTRUM_QUERY_OTAG) && phasecounter <= 4) {
-			offset_t = offset + ((int)tag - (int)read_buffer);
+			offset_t = offset + (tag - read_buffer);
 
 			if (retval.analysis_timestamp_offset >= 0 && retval.analysis_timestamp_length < 0) {
 				retval.analysis_timestamp_length = (offset_t - retval.analysis_timestamp_offset)-1;
@@ -540,6 +540,7 @@ void parse_search_hit_structure(psearch_result retval, char* beginptr, FILE* fin
 		retval->search_hit_array = realloc(retval->search_hit_array, search_hit_alloc_count * sizeof(search_hit));
 	}/* if */
 
+
 }/* void parse_search_result_structure(psearch_result retval, char* beginptr, FILE* finput, pdelegate_list dlist) */
 
 
@@ -677,7 +678,6 @@ search_hit parse_search_hit(char* beginptr, FILE* finput, pdelegate_list dlist)
 
 		tag = get_xml_tag(read_buffer, &walkptr, finput, READ_BUFF_SIZE, &offset);
 	}/* while */
-
 
 	retval.alternative_protein_array = realloc(retval.alternative_protein_array, retval.alternative_protein_count * sizeof(alternative_protein));
 	alternative_protein_alloc_count = 1;
@@ -892,9 +892,9 @@ void parse_search_score_structure(psearch_hit retval, char* beginptr, FILE* finp
 /* Parses analysis_result_array structure */
 void parse_analysis_result_structure(psearch_hit retval, char* beginptr, FILE* finput, pdelegate_list dlist)
 {
-	char *tmpptr, *contents;
-	pdelegate_type delegate_t;
-
+	char *tmpptr, *tag;
+        char *contents;
+        pdelegate_type delegate_t;
 
 	if (!(retval->analysis_result_array)) {
 		retval->analysis_result_array = malloc(sizeof(analysis_result));
@@ -905,16 +905,32 @@ void parse_analysis_result_structure(psearch_hit retval, char* beginptr, FILE* f
 	retval->analysis_result_array[retval->analysis_result_count].analysis = get_xml_attribute_value(beginptr, ANALYSIS_RESULT_ATTRIB_ANALYSIS);
 
 	retval->analysis_result_array[retval->analysis_result_count].id = -1;
+
 	tmpptr = get_xml_attribute_value(beginptr, ANALYSIS_RESULT_ATTRIB_ID);
+
 	if (tmpptr) {
 		retval->analysis_result_array[retval->analysis_result_count].id = atoi(tmpptr);
 		free(tmpptr);
 	}/* if */
 
-	/* Filtering the unknown contents */
+	/*
+        tag = get_xml_tag(read_buffer, &walkptr, finput, READ_BUFF_SIZE, &offset);
+
+	while (strstr(tag, ANALYSIS_RESULT_CTAG) == NULL) {
+		// Peptide prophet
+		if (strstr(tag, PEP_PROPHET_RESULT_OTAG)) {
+			tmpptr = get_xml_attribute_value(tag, PEP_PROPHET_RESULT_ATTRIB_PROBABILITY);
+			retval->analysis_result_array[retval->analysis_result_count].probability = atof(tmpptr);
+			free(tmpptr);
+		}
+		tag = get_xml_tag(read_buffer, &walkptr, finput, READ_BUFF_SIZE, &offset);
+	}
+        */
+
+	// Filtering the unknown contents
 	tmpptr = strstr(walkptr, ANALYSIS_RESULT_CTAG);
 	if (!tmpptr) {
-		offset += update_pepxml_buffer(read_buffer, walkptr, finput, READ_BUFF_SIZE);
+		offset += update_xml_buffer(read_buffer, walkptr, finput, READ_BUFF_SIZE);
 		walkptr = read_buffer;
 		tmpptr = strstr(walkptr, ANALYSIS_RESULT_CTAG);
 	}// if
@@ -923,21 +939,20 @@ void parse_analysis_result_structure(psearch_hit retval, char* beginptr, FILE* f
 	tmpptr[0] = ANALYSIS_RESULT_CTAG[0];
 	walkptr = tmpptr;
 
-	/* Finding delegates, or if none, just store the string */
+	// Finding delegates, or if none, just store the string
 	delegate_t = get_delegate(retval->analysis_result_array[retval->analysis_result_count].analysis, "analysis_result", dlist);
 	if (delegate_t != NULL)
 		retval->analysis_result_array[retval->analysis_result_count].hook = delegate_t->pread_function(contents);
 	else
 		retval->analysis_result_array[retval->analysis_result_count].hook = contents;
 
-	/* Updating counters and making more room for future structures */
+	// Updating counters and making more room for future structures
 	retval->analysis_result_count += 1;
 	if (retval->analysis_result_count == analysis_result_alloc_count) {
 		analysis_result_alloc_count *= 2;
 		retval->analysis_result_array = realloc(retval->analysis_result_array, analysis_result_alloc_count * sizeof(analysis_result));
-	}/* if */
-
-}/* void parse_analysis_result_structure(psearch_hit retval, char* beginptr, FILE* finput, pdelegate_list dlist) */
+	}
+}
 
 
 /* Parses parameter_array structure */
@@ -967,3 +982,5 @@ void parse_parameter_structure(psearch_hit retval, char* beginptr, FILE* finput)
 	}/* if */
 
 }/* void parse_parameter_structure(psearch_hit retval, char* beginptr, FILE* finput) */
+
+

@@ -1,9 +1,8 @@
-#ifndef __PEPTIDE_PROPHET_DELEGATE_H__
-#define __PEPTIDE_PROPHET_DELEGATE_H__
+#ifndef PEPTIDEPROPHETDELEGATE_H
+#define	PEPTIDEPROPHETDELEGATE_H
 
-#ifdef __cplusplus
-extern "C"
-{
+#ifdef	__cplusplus
+extern "C" {
 #endif
 
 #include "pepXMLDelegates.h"
@@ -60,8 +59,9 @@ void* peptide_prophet_result_property(char* key, void* res);
 void unload_peptide_prophet_result(void* res);
 
 
-#ifdef __cplusplus
+#ifdef	__cplusplus
 }
 #endif
 
-#endif
+#endif	/* PEPTIDEPROPHETDELEGATE_H */
+

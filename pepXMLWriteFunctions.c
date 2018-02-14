@@ -36,6 +36,7 @@ void write_msms_pipeline_analysis(pmsms_pipeline_analysis pepxml_file, char* des
 	fprintf(output, "%s", MSMS_PIPELINE_ANALYSIS_OTAG);
 	if (pepxml_file->name)
 		fprintf(output, " name=\"%s\"", pepxml_file->name);
+
 	fprintf(output, " date=\"%s\" summary_xml=\"%s\"", pepxml_file->date, pepxml_file->summary_xml);
 	fprintf(output, " xmlns=\"http://regis-web.systemsbiology.net/pepXML\"");
 	fprintf(output, " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"");
@@ -591,4 +592,5 @@ void print_parameter(search_hit s_hit, FILE* output)
 	}/* for */
 
 }/* void print_parameter(search_hit s_hit, FILE* output) */
+
 

@@ -1,4 +1,4 @@
-14:34:49 **** Build of configuration Debug for project pepXMLLib ****
+14:48:34 **** Build of configuration Debug for project pepXMLLib ****
 make all 
 Building file: ../src/IOFunctions.c
 Invoking: Cygwin C Compiler
@@ -28,62 +28,10 @@ Finished building: ../src/pepXMLDelegates.c
 Building file: ../src/pepXMLParser.c
 Invoking: Cygwin C Compiler
 gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/pepXMLParser.d" -MT"src/pepXMLParser.o" -o "src/pepXMLParser.o" "../src/pepXMLParser.c"
-../src/pepXMLParser.c: In function 'parse_msms_pipeline_analysis':
-../src/pepXMLParser.c:81:37: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
-    retval->start_offset = offset + ((int)tag - (int)read_buffer);
-                                     ^
-../src/pepXMLParser.c:81:48: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
-    retval->start_offset = offset + ((int)tag - (int)read_buffer);
-                                                ^
-../src/pepXMLParser.c:89:49: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
-     retval->analysis_summary_offset = offset + ((int)tag - (int)read_buffer);
-                                                 ^
-../src/pepXMLParser.c:89:60: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
-     retval->analysis_summary_offset = offset + ((int)tag - (int)read_buffer);
-                                                            ^
-../src/pepXMLParser.c:99:51: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
-     retval->dataset_derivation_offset = offset + ((int)tag - (int)read_buffer);
-                                                   ^
-../src/pepXMLParser.c:99:62: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
-     retval->dataset_derivation_offset = offset + ((int)tag - (int)read_buffer);
-                                                              ^
-../src/pepXMLParser.c:111:53: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
-     retval->dataset_derivation_length = ((offset + ((int)tag - (int)read_buffer)) - retval->dataset_derivation_offset)-1;
-                                                     ^
-../src/pepXMLParser.c:111:64: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
-     retval->dataset_derivation_length = ((offset + ((int)tag - (int)read_buffer)) - retval->dataset_derivation_offset)-1;
-                                                                ^
-../src/pepXMLParser.c:114:51: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
-     retval->analysis_summary_length = ((offset + ((int)tag - (int)read_buffer)) - retval->dataset_derivation_offset)-1;
-                                                   ^
-../src/pepXMLParser.c:114:62: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
-     retval->analysis_summary_length = ((offset + ((int)tag - (int)read_buffer)) - retval->dataset_derivation_offset)-1;
-                                                              ^
-../src/pepXMLParser.c: In function 'parse_run_summary':
-../src/pepXMLParser.c:260:44: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
-    retval.sample_enzyme_offset = offset + ((int)tag - (int)read_buffer);
-                                            ^
-../src/pepXMLParser.c:260:55: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
-    retval.sample_enzyme_offset = offset + ((int)tag - (int)read_buffer);
-                                                       ^
-../src/pepXMLParser.c:269:46: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
-     retval.search_summary_offset = offset + ((int)tag - (int)read_buffer);
-                                              ^
-../src/pepXMLParser.c:269:57: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
-     retval.search_summary_offset = offset + ((int)tag - (int)read_buffer);
-                                                         ^
-../src/pepXMLParser.c:282:50: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
-     retval.analysis_timestamp_offset = offset + ((int)tag - (int)read_buffer);
-                                                  ^
-../src/pepXMLParser.c:282:61: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
-     retval.analysis_timestamp_offset = offset + ((int)tag - (int)read_buffer);
-                                                             ^
-../src/pepXMLParser.c:296:25: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
-    offset_t = offset + ((int)tag - (int)read_buffer);
-                         ^
-../src/pepXMLParser.c:296:36: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
-    offset_t = offset + ((int)tag - (int)read_buffer);
-                                    ^
+../src/pepXMLParser.c: In function 'parse_analysis_result_structure':
+../src/pepXMLParser.c:895:17: warning: unused variable 'tag' [-Wunused-variable]
+  char *tmpptr, *tag;
+                 ^~~
 Finished building: ../src/pepXMLParser.c
  
 Building file: ../src/pepXMLReader.c
@@ -108,5 +56,5 @@ ar: creating libpepXMLLib.a
 Finished building target: libpepXMLLib.a
  
 
-14:34:57 Build Finished (took 7s.674ms)
+14:48:41 Build Finished (took 7s.577ms)
 

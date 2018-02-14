@@ -1,22 +1,10 @@
-#ifndef __PEPXML_DELEGATES_H__
-#define __PEPXML_DELEGATES_H__
+#ifndef PEPXMLDELEGATES_H
+#define	PEPXMLDELEGATES_H
 
-#ifdef __cplusplus
-extern "C"
-{
+#ifdef	__cplusplus
+extern "C" {
 #endif
-/*
-	Here we define a rudimentary delegate structure and interfaces that allows the future
-	implementation of reading, printing and analyzing of custom algorithm parts of the
-	pepxml files.
-*/
 
-/*	Interface definition. Each custom algorithm should provide 3 functions:
-		- key: key that will trigger the use of the specified funct ions
-		- read function, reads the intended part designated with the given key
-		- write function, writes the custom format to a string of type char*
-		- property function, returns the value of a certain key somewhere stored in the custom structure
-*/
 typedef struct pepxml_delegate
 {
 	char* key;
@@ -50,8 +38,11 @@ void add_delegate_to_list(pdelegate_list list, pdelegate_type delegate_t);
 /* Function that helps finding the correct delegate, NULL if key is not found in the array */
 pdelegate_type get_delegate(char* key, char* context, pdelegate_list list);
 
-#ifdef __cplusplus
+
+
+#ifdef	__cplusplus
 }
 #endif
 
-#endif
+#endif	/* PEPXMLDELEGATES_H */
+

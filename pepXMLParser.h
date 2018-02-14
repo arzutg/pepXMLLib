@@ -1,9 +1,8 @@
-#ifndef __PEPXML_PARSER_H__
-#define __PEPXML_PARSER_H__
+#ifndef PEPXMLPARSER_H
+#define	PEPXMLPARSER_H
 
-#ifdef __cplusplus
-extern "C"
-{
+#ifdef	__cplusplus
+extern "C" {
 #endif
 
 #include <stdio.h>
@@ -101,8 +100,10 @@ void parse_analysis_result_structure(psearch_hit retval, char* beginptr, FILE* f
 /* Parses parameter_array structure */
 void parse_parameter_structure(psearch_hit retval, char* beginptr, FILE* finput);
 
-#ifdef __cplusplus
+
+#ifdef	__cplusplus
 }
 #endif
 
-#endif
+#endif	/* PEPXMLPARSER_H */
+
