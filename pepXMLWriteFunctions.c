@@ -24,7 +24,9 @@ void write_msms_pipeline_analysis(pmsms_pipeline_analysis pepxml_file, char* des
 	if (!input)
 		return;
 	read_chars = fread(read_buffer, sizeof(char), pepxml_file->start_offset+1, input);
-	read_buffer[read_chars] = '\0';
+	//original was causing problem in XML tag: "<<msms_pipeline_analysis date"
+	//read_buffer[read_chars] = '\0';
+	read_buffer[read_chars-1] = '\0';
 	fclose(input);
 
 	/* Actual copying */
@@ -34,7 +36,10 @@ void write_msms_pipeline_analysis(pmsms_pipeline_analysis pepxml_file, char* des
 	fprintf(output, "%s", MSMS_PIPELINE_ANALYSIS_OTAG);
 	if (pepxml_file->name)
 		fprintf(output, " name=\"%s\"", pepxml_file->name);
-	fprintf(output, " date=\"%s\" summary_xml=\"%s\">\n", pepxml_file->date, pepxml_file->summary_xml);
+	fprintf(output, " date=\"%s\" summary_xml=\"%s\"", pepxml_file->date, pepxml_file->summary_xml);
+	fprintf(output, " xmlns=\"http://regis-web.systemsbiology.net/pepXML\"");
+	fprintf(output, " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"");
+	fprintf(output, " xsi:schemaLocation=\"http://sashimi.sourceforge.net/schema_revision/pepXML/pepXML_v117.xsd\">\n");
 
 	/* Printing individual elements */
 	print_analysis_summary(pepxml_file, output, dlist);
@@ -161,7 +166,7 @@ void print_run_summary(pmsms_pipeline_analysis pepxml_file, FILE* output, pdeleg
 void print_run_summary_element(msms_run_summary summary, FILE* output, char *input, pdelegate_list dlist)
 {
 	/* Writing required attributes */
-	fprintf(output, "%s %s=\"%s\" %s=\"%s\" %s=\"%s\"", MSMS_RUN_SUMMARY_OTAG,
+	fprintf(output, "\t%s %s=\"%s\" %s=\"%s\" %s=\"%s\"", MSMS_RUN_SUMMARY_OTAG,
 		MSMS_RUN_SUMMARY_ATTRIB_BASE_NAME, summary.base_name,
 		MSMS_RUN_SUMMARY_ATTRIB_RAW_DATA_TYPE, summary.raw_data_type,
 		MSMS_RUN_SUMMARY_ATTRIB_RAW_DATA, summary.raw_data);
@@ -188,7 +193,7 @@ void print_run_summary_element(msms_run_summary summary, FILE* output, char *inp
 	print_spectrum_query(summary, output, dlist);
 
 	/* Printing the closing tag */
-	fprintf(output, "%s>\n", MSMS_RUN_SUMMARY_CTAG);
+	fprintf(output, "\t%s>\n", MSMS_RUN_SUMMARY_CTAG);
 
 }/* void print_run_summary_element(msms_run_summary summary, FILE* output, pdelegate_list dlist) */
 
@@ -203,7 +208,7 @@ void print_sample_enzyme(msms_run_summary rsummary, FILE* output, char *input)
 		/* Loaded */
 		if (rsummary.sample_enzyme_element != NULL) {
 			/* Writing required attributes */
-			fprintf(output, "%s %s=\"%s\"", SAMPLE_ENZYME_OTAG, SAMPLE_ENZYME_ATTRIB_NAME, rsummary.sample_enzyme_element->name);
+			fprintf(output, "\t\t%s %s=\"%s\"", SAMPLE_ENZYME_OTAG, SAMPLE_ENZYME_ATTRIB_NAME, rsummary.sample_enzyme_element->name);
 
 			/* Writing optional attributes */
 			if (rsummary.sample_enzyme_element->description)
@@ -216,7 +221,7 @@ void print_sample_enzyme(msms_run_summary rsummary, FILE* output, char *input)
 			/* Writing specifity element list */
 			for (i=0; i<rsummary.sample_enzyme_element->specifity_count; i++) {
 				/* Writing header and required attributes */
-				fprintf(output, "%s %s=\"%s\" %s=\"%s\" %s=\"%s\"", SPECIFITY_OTAG,
+				fprintf(output, "\t\t\t%s %s=\"%s\" %s=\"%s\" %s=\"%s\"", SPECIFITY_OTAG,
 					SPECIFITY_ATTRIB_SENSE, rsummary.sample_enzyme_element->specifity_array[i].sense,
 					SPECIFITY_ATTRIB_CUT, rsummary.sample_enzyme_element->specifity_array[i].cut,
 					SPECIFITY_ATTRIB_NO_CUT, rsummary.sample_enzyme_element->specifity_array[i].no_cut);
@@ -230,7 +235,7 @@ void print_sample_enzyme(msms_run_summary rsummary, FILE* output, char *input)
 			}/* for */
 
 			/* Printing "closing tag */
-			fprintf(output, "%s>\n", SAMPLE_ENZYME_CTAG);
+			fprintf(output, "\t\t%s>\n", SAMPLE_ENZYME_CTAG);
 		}/* if */
 		else {
 			finput = fopen(input, "rb");
@@ -256,9 +261,9 @@ void print_search_summary(msms_run_summary rsummary, FILE* output, char *input)
 		if (rsummary.search_summary_array != NULL) {
 			for (i=0; i<rsummary.search_summary_count; i++) {
 				/* Print opening tag and content */
-				fprintf(output, "%s %s", SEARCH_SUMMARY_OTAG, rsummary.search_summary_array[i].contents);
+				fprintf(output, "\t\t%s %s", SEARCH_SUMMARY_OTAG, rsummary.search_summary_array[i].contents);
 				/* Print closing tag */
-				fprintf(output, "%s>\n", SEARCH_SUMMARY_CTAG);
+				fprintf(output, "\t\t%s>\n", SEARCH_SUMMARY_CTAG);
 			}/* for */
 		}/* if */
 		else {
@@ -317,7 +322,7 @@ void print_spectrum_query(msms_run_summary rsummary, FILE* output, pdelegate_lis
 void print_spectrum_query_element(spectrum_query squery, FILE* output, pdelegate_list dlist)
 {
 	/* Printing opening tag and required attributes */
-	fprintf(output, "%s %s=\"%s\" %s=\"%i\" %s=\"%i\" %s=\"%f\" %s=\"%i\" %s=\"%i\"", SPECTRUM_QUERY_OTAG,
+	fprintf(output, "\t\t%s %s=\"%s\" %s=\"%i\" %s=\"%i\" %s=\"%f\" %s=\"%i\" %s=\"%i\"", SPECTRUM_QUERY_OTAG,
 		SPECTRUM_QUERY_ATTRIB_SPECTRUM, squery.spectrum,
 		SPECTRUM_QUERY_ATTRIB_START_SCAN, squery.start_scan,
 		SPECTRUM_QUERY_ATTRIB_END_SCAN, squery.end_scan,
@@ -340,7 +345,7 @@ void print_spectrum_query_element(spectrum_query squery, FILE* output, pdelegate
 	print_search_result(squery, output, dlist);
 
 	/* Print closing tag */
-	fprintf(output, "%s>\n", SPECTRUM_QUERY_CTAG);
+	fprintf(output, "\t\t%s>\n", SPECTRUM_QUERY_CTAG);
 
 }/* void print_spectrum_query_element(spectrum_query squery, FILE* output, pdelegate_list dlist) */
 
@@ -352,7 +357,7 @@ void print_search_result(spectrum_query squery, FILE* output, pdelegate_list dli
 
 	for (i=0; i<squery.search_result_count; i++) {
 		/* Print opening tag */
-		fprintf(output, "%s", SEARCH_RESULT_OTAG);
+		fprintf(output, "\t\t\t%s", SEARCH_RESULT_OTAG);
 
 		/* Print optional attributes */
 		if (squery.search_result_array[i].search_id >= 0)
@@ -365,7 +370,7 @@ void print_search_result(spectrum_query squery, FILE* output, pdelegate_list dli
 		print_search_hit(squery.search_result_array[i], output, dlist);
 
 		/* Print closing tag */
-		fprintf(output, "%s>\n", SEARCH_RESULT_CTAG);
+		fprintf(output, "\t\t\t%s>\n", SEARCH_RESULT_CTAG);
 	}/* for */
 
 }/* void print_search_result(spectrum_query squery, FILE* output, pdelegate_list dlist) */
@@ -387,35 +392,33 @@ void print_search_hit(search_result sresult, FILE* output, pdelegate_list dlist)
 void print_search_hit_element(search_hit s_hit, FILE* output, pdelegate_list dlist)
 {
 	/* Printing opening tag and required attributes */
-	fprintf(output, "%s %s=\"%i\" %s=\"%s\" %s=\"%s\" %s=\"%i\" %s=\"%f\" %s=\"%f\"", SEARCH_HIT_OTAG,
-		SEARCH_HIT_ATTRIB_HIT_RANK, s_hit.hit_rank,
-		SEARCH_HIT_ATTRIB_PEPTIDE, s_hit.peptide,
-		SEARCH_HIT_ATTRIB_PROTEIN, s_hit.protein,
-		SEARCH_HIT_ATTRIB_NUM_TOT_PROTEINS, s_hit.num_tot_proteins,
-		SEARCH_HIT_ATTRIB_CALC_NEUTRAL_PEP_MASS, s_hit.calc_neutral_pep_mass,
-		SEARCH_HIT_ATTRIB_MASSDIFF, s_hit.massdiff);
-
-	/* Printing optional attributes */
-	if (s_hit.peptide_prev_aa)
-		fprintf(output, " %s=\"%s\"", SEARCH_HIT_ATTRIB_PEPTIDE_PREV_AA, s_hit.peptide_prev_aa);
-	if (s_hit.peptide_next_aa)
-		fprintf(output, " %s=\"%s\"", SEARCH_HIT_ATTRIB_PEPTIDE_NEXT_AA, s_hit.peptide_next_aa);
-	if (s_hit.num_matched_ions >= 0)
-		fprintf(output, " %s=\"%i\"", SEARCH_HIT_ATTRIB_NUM_MATCHED_IONS, s_hit.num_matched_ions);
-	if (s_hit.tot_num_ions >= 0)
-		fprintf(output, " %s=\"%i\"", SEARCH_HIT_ATTRIB_TOT_NUM_IONS, s_hit.tot_num_ions);
-	if (s_hit.num_tol_term >= 0)
-		fprintf(output, " %s=\"%i\"", SEARCH_HIT_ATTRIB_NUM_TOL_TERM, s_hit.num_tol_term);
-	if (s_hit.num_missed_cleavages >= 0)
-		fprintf(output, " %s=\"%i\"", SEARCH_HIT_ATTRIB_NUM_MISSED_CLEAVAGES, s_hit.num_missed_cleavages);
-	if (s_hit.is_rejected == 1)
-		fprintf(output, " %s=\"1\"", SEARCH_HIT_ATTRIB_IS_REJECTED);
-	if (s_hit.protein_descr)
-		fprintf(output, " %s=\"%s\"", SEARCH_HIT_ATTRIB_PROTEIN_DESCR, s_hit.protein_descr);
-	if (s_hit.calc_pI >= 0)
-		fprintf(output, " %s=\"%f\"", SEARCH_HIT_ATTRIB_CALC_PI, s_hit.calc_pI);
-	if (s_hit.protein_mw >= 0)
-		fprintf(output, " %s=\"%f\"", SEARCH_HIT_ATTRIB_PROTEIN_MW, s_hit.protein_mw);
+	fprintf(output, "\t\t\t\t%s %s=\"%i\" %s=\"%s\"",SEARCH_HIT_OTAG,
+		SEARCH_HIT_ATTRIB_HIT_RANK,s_hit.hit_rank,
+		SEARCH_HIT_ATTRIB_PEPTIDE, s_hit.peptide);
+		if (s_hit.peptide_prev_aa)
+			fprintf(output, " %s=\"%s\"", SEARCH_HIT_ATTRIB_PEPTIDE_PREV_AA, s_hit.peptide_prev_aa);
+		if (s_hit.peptide_next_aa)
+			fprintf(output, " %s=\"%s\"", SEARCH_HIT_ATTRIB_PEPTIDE_NEXT_AA, s_hit.peptide_next_aa);
+		fprintf(output," %s=\"%s\"",SEARCH_HIT_ATTRIB_PROTEIN, s_hit.protein);
+		if (s_hit.protein_descr)
+			fprintf(output, " %s=\"%s\"", SEARCH_HIT_ATTRIB_PROTEIN_DESCR, s_hit.protein_descr);
+		fprintf(output," %s=\"%i\"",SEARCH_HIT_ATTRIB_NUM_TOT_PROTEINS, s_hit.num_tot_proteins);
+		if (s_hit.num_matched_ions >= 0)
+			fprintf(output, " %s=\"%i\"", SEARCH_HIT_ATTRIB_NUM_MATCHED_IONS, s_hit.num_matched_ions);
+		if (s_hit.tot_num_ions >= 0)
+			fprintf(output, " %s=\"%i\"", SEARCH_HIT_ATTRIB_TOT_NUM_IONS, s_hit.tot_num_ions);
+		fprintf(output," %s=\"%f\"",SEARCH_HIT_ATTRIB_CALC_NEUTRAL_PEP_MASS, s_hit.calc_neutral_pep_mass);
+		fprintf(output," %s=\"%f\"",SEARCH_HIT_ATTRIB_MASSDIFF, s_hit.massdiff);
+		if (s_hit.num_tol_term >= 0)
+			fprintf(output, " %s=\"%i\"", SEARCH_HIT_ATTRIB_NUM_TOL_TERM, s_hit.num_tol_term);
+		if (s_hit.num_missed_cleavages >= 0)
+			fprintf(output, " %s=\"%i\"", SEARCH_HIT_ATTRIB_NUM_MISSED_CLEAVAGES, s_hit.num_missed_cleavages);
+		if (s_hit.is_rejected == 1)
+			fprintf(output, " %s=\"1\"", SEARCH_HIT_ATTRIB_IS_REJECTED);
+		if (s_hit.calc_pI >= 0)
+			fprintf(output, " %s=\"%f\"", SEARCH_HIT_ATTRIB_CALC_PI, s_hit.calc_pI);
+		if (s_hit.protein_mw >= 0)
+			fprintf(output, " %s=\"%f\"", SEARCH_HIT_ATTRIB_PROTEIN_MW, s_hit.protein_mw);
 
 	/* Closing the opening tag */
 	fprintf(output, ">\n");
@@ -428,7 +431,7 @@ void print_search_hit_element(search_hit s_hit, FILE* output, pdelegate_list dli
 	print_parameter(s_hit, output);
 
 	/* Print closing tag */
-	fprintf(output, "%s>\n", SEARCH_HIT_CTAG);
+	fprintf(output, "\t\t\t\t%s>\n", SEARCH_HIT_CTAG);
 
 }/* void print_search_hit_element(search_hit s_hit, FILE* output, pdelegate_list dlist) */
 
@@ -440,7 +443,7 @@ void print_alternative_protein(search_hit s_hit, FILE* output)
 
 	for (i=0; i<s_hit.alternative_protein_count; i++) {
 		/* Printing opening tag and required attributes */
-		fprintf(output, "%s %s=\"%s\"", ALTERNATIVE_PROTEIN_OTAG,
+		fprintf(output, "\t\t\t\t\t%s %s=\"%s\"", ALTERNATIVE_PROTEIN_OTAG,
 			ALTERNATIVE_PROTEIN_ATTRIB_PROTEIN, s_hit.alternative_protein_array[i].protein);
 
 		/* Printing optional attributes */
@@ -466,24 +469,34 @@ void print_modification_info(search_hit s_hit, FILE* output)
 {
 	if (s_hit.modification_info_struct) {
 		/* Printing opening tag and required attributes */
-		fprintf(output, "%s", MODIFICATION_INFO_OTAG);
+		fprintf(output, "\t\t\t\t\t%s", MODIFICATION_INFO_OTAG);
 
 		/* Printing optional attributes */
 		if (s_hit.modification_info_struct->mod_nterm_mass >= 0)
 			fprintf(output, " %s=\"%f\"", MODIFICATION_INFO_ATTRIB_MOD_NTERM_MASS, s_hit.modification_info_struct->mod_nterm_mass);
+
 		if (s_hit.modification_info_struct->mod_cterm_mass >= 0)
 			fprintf(output, " %s=\"%f\"", MODIFICATION_INFO_ATTRIB_MOD_CTERM_MASS, s_hit.modification_info_struct->mod_cterm_mass);
+
 		if (s_hit.modification_info_struct->modified_peptide)
 			fprintf(output, " %s=\"%s\"", MODIFICATION_INFO_ATTRIB_MODIFIED_PEPTIDE, s_hit.modification_info_struct->modified_peptide);
 
-		/* Close the tag */
-		fprintf(output, ">\n");
 
-		/* Print elements */
-		print_mod_aminoacid_mass(*(s_hit.modification_info_struct), output);
+	    if (s_hit.modification_info_struct->mod_aminoacid_mass_count > 0) {
+			/* Close the tag */
+			fprintf(output, ">\n");
 
-		/* Printing closing tag */
-		fprintf(output, "%s>\n", MODIFICATION_INFO_CTAG);
+			/* Print elements */
+			print_mod_aminoacid_mass(*(s_hit.modification_info_struct), output);
+
+			/* Printing closing tag */
+			fprintf(output, "\t\t\t\t\t%s>\n", MODIFICATION_INFO_CTAG);
+		}
+
+		else {
+			/* Close the tag */
+			fprintf(output, "/>\n");
+		}
 	}/* if */
 
 }/* void print_modification_info(search_hit s_hit, FILE* output) */
@@ -496,7 +509,7 @@ void print_mod_aminoacid_mass(modification_info minfo, FILE* output)
 
 	for (i=0; i<minfo.mod_aminoacid_mass_count; i++) {
 		/* Printing all at once */
-		fprintf(output, "%s %s=\"%f\" %s=\"%i\"/>\n", MOD_AMINOACID_MASS_OTAG,
+		fprintf(output, "\t\t\t\t\t\t%s %s=\"%f\" %s=\"%i\"/>\n", MOD_AMINOACID_MASS_OTAG,
 			MOD_AMINOACID_MASS_ATTRIB_MASS, minfo.mod_aminoacid_mass_array[i].mass,
 			MOD_AMINOACID_MASS_ATTRIB_POSITION, minfo.mod_aminoacid_mass_array[i].position);
 	}/* for */
@@ -511,7 +524,7 @@ void print_search_score(search_hit s_hit, FILE* output)
 
 	for (i=0; i<s_hit.search_score_count; i++) {
 		/* Printing header and required attributes */
-		fprintf(output, "%s %s=\"%s\" %s=\"%.1f\"", SEARCH_SCORE_OTAG,
+		fprintf(output, "\t\t\t\t\t%s %s=\"%s\" %s=\"%f\"", SEARCH_SCORE_OTAG,
 			SEARCH_SCORE_ATTRIB_NAME, s_hit.search_score_array[i].name,
 			SEARCH_SCORE_ATTRIB_VALUE, s_hit.search_score_array[i].value);
 

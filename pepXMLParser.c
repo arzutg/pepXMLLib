@@ -1,6 +1,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #include "pepXMLParser.h"
 #include "pepXMLDefs.h"
@@ -26,6 +27,8 @@ static int mod_aminoacid_mass_alloc_count = 1;
 static int search_score_alloc_count = 1;
 static int analysis_result_alloc_count = 1;
 static int parameter_alloc_count = 1;
+
+int search_hit_phase_counter = 0;
 
 
 /* Main interface function */
@@ -250,6 +253,7 @@ msms_run_summary parse_run_summary(char* beginptr, FILE* finput, run_summary_fla
 
 	/* Scanning till we see the end */
 	tag = get_xml_tag(read_buffer, &walkptr, finput, READ_BUFF_SIZE, &offset);
+
 	while (strstr(tag, MSMS_RUN_SUMMARY_CTAG) == NULL) {
 		/* Optional sample enzyme */
 		if (strstr(tag, SAMPLE_ENZYME_OTAG) && phasecounter <= 0) {
@@ -267,8 +271,9 @@ msms_run_summary parse_run_summary(char* beginptr, FILE* finput, run_summary_fla
 					retval.sample_enzyme_length = (retval.search_summary_offset - retval.sample_enzyme_offset)-1;
 				}// if
 			}// if
-			if (rsflags & load_search_summary)
+			if (rsflags & load_search_summary){
 				parse_search_summary_structure(&retval, tag, finput);
+			}
 			phasecounter = 2;
 		}/* else if */
 		/* Optional analysis timestamp */
@@ -282,8 +287,9 @@ msms_run_summary parse_run_summary(char* beginptr, FILE* finput, run_summary_fla
 					retval.sample_enzyme_length = (retval.analysis_timestamp_offset - retval.sample_enzyme_offset)-1;
 				}// if
 			}// if
-			if (rsflags & load_analysis_timestamp)
+			if (rsflags & load_analysis_timestamp){
 				parse_analysis_timestamp_structure(&retval, tag, finput);
+			}
 			phasecounter = 3;
 		}/* else if */
 		else if (strstr(tag, SPECTRUM_QUERY_OTAG) && phasecounter <= 4) {
@@ -306,16 +312,21 @@ msms_run_summary parse_run_summary(char* beginptr, FILE* finput, run_summary_fla
 		tag = get_xml_tag(read_buffer, &walkptr, finput, READ_BUFF_SIZE, &offset);
 	}/* while */
 
-	if (retval.search_summary_array)
+	if (retval.search_summary_array){
 		retval.search_summary_array = realloc(retval.search_summary_array, retval.search_summary_count * sizeof(search_summary));
+	}
 	search_summary_alloc_count = 1;
 
-	if (retval.analysis_timestamp_array)
+	if (retval.analysis_timestamp_array){
 		retval.analysis_timestamp_array = realloc(retval.analysis_timestamp_array, retval.analysis_timestamp_count * sizeof(analysis_timestamp));
+	}
+
 	analysis_timestamp_alloc_count = 1;
 
-	if (retval.spectrum_query_array)
+	if (retval.spectrum_query_array){
 		retval.spectrum_query_array = realloc(retval.spectrum_query_array, retval.spectrum_query_count * sizeof(spectrum_query));
+	}
+
 	spectrum_query_alloc_count = 1;
 
 	return retval;
@@ -445,7 +456,6 @@ spectrum_query parse_spectrum_query(char* beginptr, FILE* finput, pdelegate_list
 		if (strstr(tag, SEARCH_RESULT_OTAG)) {
 			parse_search_result_structure(&retval, tag, finput, dlist);
 		}/* if */
-
 		tag = get_xml_tag(read_buffer, &walkptr, finput, READ_BUFF_SIZE, &offset);
 	}/* while */
 
@@ -475,7 +485,6 @@ void parse_search_result_structure(pspectrum_query retval, char* beginptr, FILE*
 		search_result_alloc_count *= 2;
 		retval->search_result_array = realloc(retval->search_result_array, search_result_alloc_count * sizeof(search_result));
 	}/* if */
-
 }/* void parse_search_result_structure(pspectrum_query retval, char* beginptr, FILE* finput, pdelegate_list dlist) */
 
 
@@ -496,7 +505,6 @@ search_result parse_search_result(char* beginptr, FILE* finput, pdelegate_list d
 		retval.search_id = atoi(tmpptr);
 		free(tmpptr);
 	}/* if */
-
 	/* Scanning till we see the end */
 	tag = get_xml_tag(read_buffer, &walkptr, finput, READ_BUFF_SIZE, &offset);
 	while (strstr(tag, SEARCH_RESULT_CTAG) == NULL) {
@@ -504,13 +512,11 @@ search_result parse_search_result(char* beginptr, FILE* finput, pdelegate_list d
 		if (strstr(tag, SEARCH_HIT_OTAG)) {
 			parse_search_hit_structure(&retval, tag, finput, dlist);
 		}/* if */
-
 		tag = get_xml_tag(read_buffer, &walkptr, finput, READ_BUFF_SIZE, &offset);
 	}/* while */
 
 	retval.search_hit_array = realloc(retval.search_hit_array, retval.search_hit_count * sizeof(search_hit));
 	search_hit_alloc_count = 1;
-
 	return retval;
 
 }/* search_result parse_search_result(char* beginptr, FILE* finput, pdelegate_list dlist) */
@@ -542,7 +548,7 @@ search_hit parse_search_hit(char* beginptr, FILE* finput, pdelegate_list dlist)
 {
 	search_hit retval;
 	char *tmpptr, *tag;
-	int phasecounter = 0;
+	search_hit_phase_counter = 0;
 
 	/* Setting the optional values to their default value */
 	retval.num_matched_ions = -1;
@@ -561,7 +567,6 @@ search_hit parse_search_hit(char* beginptr, FILE* finput, pdelegate_list dlist)
 	retval.analysis_result_count = 0;
 	retval.parameter_array = NULL;
 	retval.parameter_count = 0;
-
 
 	/* Parse and convert hit rank */
 	tmpptr = get_xml_attribute_value(beginptr, SEARCH_HIT_ATTRIB_HIT_RANK);
@@ -642,35 +647,37 @@ search_hit parse_search_hit(char* beginptr, FILE* finput, pdelegate_list dlist)
 
 	/* Scanning till we see the end */
 	tag = get_xml_tag(read_buffer, &walkptr, finput, READ_BUFF_SIZE, &offset);
+
 	while (strstr(tag, SEARCH_HIT_CTAG) == NULL) {
 		/* Alternative proteins */
-		if (strstr(tag, ALTERNATIVE_PROTEIN_OTAG)&& phasecounter <= 1) {
+		if (strstr(tag, ALTERNATIVE_PROTEIN_OTAG)&& search_hit_phase_counter <= 1) {
 			parse_alternative_protein_structure(&retval, tag, finput);
-			phasecounter = 1;
+			search_hit_phase_counter = 1;
 		}/* if */
 		/* Modification info tag */
-		else if (strstr(tag, MODIFICATION_INFO_OTAG) && phasecounter <= 2) {
+		else if (strstr(tag, MODIFICATION_INFO_OTAG) && search_hit_phase_counter <= 2) {
 			parse_modification_info_structure(&retval, tag, finput);
-			phasecounter = 2;
+			search_hit_phase_counter = 2;
 		}/* else if */
 		/* Search score tag */
-		else if (strstr(tag, SEARCH_SCORE_OTAG) && phasecounter <= 3) {
-			parse_search_score_structure(&retval, tag, finput);
-			phasecounter = 3;
+		else if (strstr(tag, SEARCH_SCORE_OTAG) && search_hit_phase_counter <= 3) {
+	    	parse_search_score_structure(&retval, tag, finput);
+			search_hit_phase_counter = 3;
 		}/* else if */
 		/* Analysis result tag */
-		else if (strstr(tag, ANALYSIS_RESULT_OTAG) && phasecounter <= 4) {
+		else if (strstr(tag, ANALYSIS_RESULT_OTAG) && search_hit_phase_counter <= 4) {
 			parse_analysis_result_structure(&retval, tag, finput, dlist);
-			phasecounter = 4;
+			search_hit_phase_counter = 4;
 		}/* else if */
 		/* Parameter tag */
-		else if (strstr(tag, PARAMETER_OTAG) && phasecounter <= 5) {
+		else if (strstr(tag, PARAMETER_OTAG) && search_hit_phase_counter <= 5) {
 			parse_parameter_structure(&retval, tag, finput);
-			phasecounter = 5;
+			search_hit_phase_counter = 5;
 		}/* else if */
 
 		tag = get_xml_tag(read_buffer, &walkptr, finput, READ_BUFF_SIZE, &offset);
 	}/* while */
+
 
 	retval.alternative_protein_array = realloc(retval.alternative_protein_array, retval.alternative_protein_count * sizeof(alternative_protein));
 	alternative_protein_alloc_count = 1;
@@ -750,6 +757,7 @@ alternative_protein parse_alternative_protein(char* beginptr, FILE* finput)
 void parse_modification_info_structure(psearch_hit retval, char* beginptr, FILE* finput)
 {
 	char* tmpptr, *tag;
+	bool mod_mass_exists = 0;
 
 	retval->modification_info_struct = malloc(sizeof(modification_info));
 	retval->modification_info_struct->mod_aminoacid_mass_array = NULL;
@@ -758,31 +766,52 @@ void parse_modification_info_structure(psearch_hit retval, char* beginptr, FILE*
 	/* Filtering attributes */
 	tmpptr = get_xml_attribute_value(beginptr, MODIFICATION_INFO_ATTRIB_MOD_NTERM_MASS);
 	if (tmpptr) {
+		mod_mass_exists = 1;
 		retval->modification_info_struct->mod_nterm_mass = strtod(tmpptr, NULL);
 		free(tmpptr);
 	}/* if */
-	else
+	else{
 		retval->modification_info_struct->mod_nterm_mass = -1;
+	}
 
 	tmpptr = get_xml_attribute_value(beginptr, MODIFICATION_INFO_ATTRIB_MOD_CTERM_MASS);
 	if (tmpptr) {
+		mod_mass_exists = 1;
 		retval->modification_info_struct->mod_cterm_mass = strtod(tmpptr, NULL);
 		free(tmpptr);
 	}/* if */
-	else
+	else {
 		retval->modification_info_struct->mod_cterm_mass = -1;
+	}
 
-	retval->modification_info_struct->modified_peptide = get_xml_attribute_value(beginptr, MODIFICATION_INFO_ATTRIB_MODIFIED_PEPTIDE);
+    tmpptr = get_xml_attribute_value(beginptr, MODIFICATION_INFO_ATTRIB_MODIFIED_PEPTIDE);
+	if (tmpptr) {
+		mod_mass_exists = 1;
+		retval->modification_info_struct->modified_peptide = tmpptr;
+		free(tmpptr);
+	}/* if */
+	else {
+		retval->modification_info_struct->modified_peptide = NULL;
+	}
+
+	//changed: retval->modification_info_struct->modified_peptide = get_xml_attribute_value(beginptr, MODIFICATION_INFO_ATTRIB_MODIFIED_PEPTIDE);
 
 	/* Scanning till we see the end */
 	tag = get_xml_tag(read_buffer, &walkptr, finput, READ_BUFF_SIZE, &offset);
-	while (strstr(tag, MODIFICATION_INFO_CTAG) == NULL) {
-		/* Modified aminoacid masses */
+
+	if(strstr(tag, SEARCH_SCORE_OTAG) && search_hit_phase_counter <= 3){
+		parse_search_score_structure(retval, tag, finput);
+		search_hit_phase_counter = 3;
+	}
+
+	while ((!mod_mass_exists && (strstr(tag, MODIFICATION_INFO_CTAG) == NULL))  ||
+		   ( mod_mass_exists && strstr(tag, MOD_AMINOACID_MASS_OTAG) && (strstr(tag, MODIFICATION_INFO_CTAG) == NULL) ) ) {
+
 		if (strstr(tag, MOD_AMINOACID_MASS_OTAG)) {
 			parse_mod_aminoacid_mass_structure(retval->modification_info_struct, tag, finput);
-		}/* if */
+		}
 		tag = get_xml_tag(read_buffer, &walkptr, finput, READ_BUFF_SIZE, &offset);
-	}/* while */
+	}
 
 	retval->modification_info_struct->mod_aminoacid_mass_array = realloc(retval->modification_info_struct->mod_aminoacid_mass_array, retval->modification_info_struct->mod_aminoacid_mass_count * sizeof(mod_aminoacid_mass));
 	mod_aminoacid_mass_alloc_count = 1;
@@ -844,6 +873,7 @@ void parse_search_score_structure(psearch_hit retval, char* beginptr, FILE* finp
 	retval->search_score_array[retval->search_score_count].name = get_xml_attribute_value(beginptr, SEARCH_SCORE_ATTRIB_NAME);
 
 	tmpptr = get_xml_attribute_value(beginptr, SEARCH_SCORE_ATTRIB_VALUE);
+
 	retval->search_score_array[retval->search_score_count].value = strtod(tmpptr, NULL);
 	free(tmpptr);
 
